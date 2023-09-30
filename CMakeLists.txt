@@ -13,12 +13,13 @@ add_compile_options(-Wall -Wextra)
 
 
 include_directories(include)
-add_library(${PROJECT} STATIC
+add_library(${PROJECT_NAME} STATIC
   src/data_stream_stats.cpp)
-  
-#main.cpp leet_test.cpp)
-#target_link_libraries(leet gtest glog pthread)
 
 
 enable_testing()
-#include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+add_executable(${PROJECT_NAME}_test
+  src/data_stream_stats_test.cpp
+  src/main_test.cpp)
+target_link_libraries(${PROJECT_NAME}_test gtest pthread ${PROJECT_NAME})

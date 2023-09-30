@@ -1,12 +1,18 @@
-#include <cassert>
-#include "leet.cpp"
 #include <gtest/gtest.h>
-#include "glog/stl_logging.h"
-#include "glog/logging.h"
+#include <cassert>
+#include "data_stream_stats.h"
 
 TEST(kk, t1) {
-  Solution sol;
+  DataStreamStats obj(6);
+  for(int i=0; i<16; i++)
+  {
+    obj.add(i);
+  }
+  for(int i=1; i<=6; i++)
+  {
+    obj.add(i);
+  }
 
-  EXPECT_EQ(sol.trailingZeroes(3), 0);
+  EXPECT_EQ(obj.sum(), 21);
 }
 
