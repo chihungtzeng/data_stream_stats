@@ -14,5 +14,5 @@ class DataStreamStats {
  private:
   const int window_size_;
   std::deque<double> vals;
-  double sum_, average_, std_, variance_;
+  double sum_, variance_, square_sum_;
 };
