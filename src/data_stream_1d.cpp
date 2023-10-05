@@ -1,8 +1,8 @@
-#include "data_stream_stats.h"
+#include "data_stream_1d.h"
 
 #include <cmath>
 
-DataStreamStats::DataStreamStats(const int window_size)
+DataStream1D::DataStream1D(const int window_size)
     : window_size_(window_size) {
   for (int i = 0; i < window_size; i++) {
     vals.push_back(0);
@@ -12,7 +12,7 @@ DataStreamStats::DataStreamStats(const int window_size)
   square_sum_ = 0;
 }
 
-void DataStreamStats::add(double val) {
+void DataStream1D::add(double val) {
   auto front = vals.front();
   vals.pop_front();
 
@@ -27,13 +27,13 @@ void DataStreamStats::add(double val) {
   }
 }
 
-double DataStreamStats::sum() { return sum_; }
-double DataStreamStats::average() {
+double DataStream1D::sum() { return sum_; }
+double DataStream1D::average() {
   if (window_size_ > 0) {
     return sum_ / window_size_;
   } else {
     return 0;
   }
 }
-double DataStreamStats::std() { return sqrt(variance_); }
-double DataStreamStats::variance() { return variance_; }
+double DataStream1D::std() { return sqrt(variance_); }
+double DataStream1D::variance() { return variance_; }

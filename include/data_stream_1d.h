@@ -1,10 +1,10 @@
 #pragma once
 #include <deque>
 
-class DataStreamStats {
+class DataStream1D {
  public:
-  DataStreamStats(const int window_size);
-  ~DataStreamStats(){};
+  DataStream1D(const int window_size);
+  ~DataStream1D(){};
   void add(double val);
   double sum();
   double average();

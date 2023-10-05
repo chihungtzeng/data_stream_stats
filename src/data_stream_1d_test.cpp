@@ -1,6 +1,6 @@
 #include <cmath>
 #include <gtest/gtest.h>
-#include "data_stream_stats.h"
+#include "data_stream_1d.h"
 
 
 using namespace std;
@@ -34,8 +34,8 @@ static double std_of(deque<double>& vals)
 }
 
 
-TEST(DataStreamStats, test_6) {
-  DataStreamStats obj(6);
+TEST(DataStream1D, test_6) {
+  DataStream1D obj(6);
   for (int i = 0; i < 16; i++) {
     obj.add(i);
   }
@@ -49,8 +49,8 @@ TEST(DataStreamStats, test_6) {
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
 }
 
-TEST(DataStreamStats, test_0) {
-  DataStreamStats obj(0);
+TEST(DataStream1D, test_0) {
+  DataStream1D obj(0);
   for (int i = 0; i < 16; i++) {
     obj.add(i);
   }
@@ -58,8 +58,8 @@ TEST(DataStreamStats, test_0) {
   EXPECT_DOUBLE_EQ(obj.average(), 0);
 }
 
-TEST(DataStreamStats, test_1) {
-  DataStreamStats obj(1);
+TEST(DataStream1D, test_1) {
+  DataStream1D obj(1);
   for (int i = 0; i < 16; i++) {
     obj.add(i);
   }
@@ -69,8 +69,8 @@ TEST(DataStreamStats, test_1) {
   EXPECT_DOUBLE_EQ(obj.std(), 0);
 }
 
-TEST(DataStreamStats, test_stress) {
-  DataStreamStats obj(100);
+TEST(DataStream1D, test_stress) {
+  DataStream1D obj(100);
   for (int i = 1000000; i >= 0; i--) {
     obj.add(i);
     EXPECT_TRUE(obj.sum());
@@ -80,7 +80,7 @@ TEST(DataStreamStats, test_stress) {
   }
 }
 
-TEST(DataStreamStats, test_naive) {
+TEST(DataStream1D, test_naive) {
   deque<double> vals;
   for (int i = 1000000; i >= 0; i--) {
     vals.push_back(i);
