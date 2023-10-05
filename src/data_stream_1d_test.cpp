@@ -4,6 +4,7 @@
 
 
 using namespace std;
+const int WINDOW_SIZE = 10;
 
 static double sum_of(deque<double>& vals)
 {
@@ -34,7 +35,7 @@ static double std_of(deque<double>& vals)
 }
 
 
-TEST(DataStream1D, test_6) {
+TEST(DataStream1D, test_normal_window_size) {
   DataStream1D obj(6);
   for (int i = 0; i < 16; i++) {
     obj.add(i);
@@ -49,16 +50,7 @@ TEST(DataStream1D, test_6) {
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
 }
 
-TEST(DataStream1D, test_0) {
-  DataStream1D obj(0);
-  for (int i = 0; i < 16; i++) {
-    obj.add(i);
-  }
-  EXPECT_DOUBLE_EQ(obj.sum(), 0);
-  EXPECT_DOUBLE_EQ(obj.average(), 0);
-}
-
-TEST(DataStream1D, test_1) {
+TEST(DataStream1D, test_window_size_one) {
   DataStream1D obj(1);
   for (int i = 0; i < 16; i++) {
     obj.add(i);
@@ -69,8 +61,31 @@ TEST(DataStream1D, test_1) {
   EXPECT_DOUBLE_EQ(obj.std(), 0);
 }
 
+
+TEST(DataStream1D, test_window_size_zero) {
+  DataStream1D obj(0);
+  for (int i = 0; i < 16; i++) {
+    obj.add(i);
+  }
+  EXPECT_DOUBLE_EQ(obj.sum(), 15);
+  EXPECT_DOUBLE_EQ(obj.average(), 15);
+  EXPECT_DOUBLE_EQ(obj.variance(), 0);
+  EXPECT_DOUBLE_EQ(obj.std(), 0);
+}
+
+TEST(DataStream1D, test_window_size_negtaive) {
+  DataStream1D obj(-1);
+  for (int i = 0; i < 16; i++) {
+    obj.add(i);
+  }
+  EXPECT_DOUBLE_EQ(obj.sum(), 15);
+  EXPECT_DOUBLE_EQ(obj.average(), 15);
+  EXPECT_DOUBLE_EQ(obj.variance(), 0);
+  EXPECT_DOUBLE_EQ(obj.std(), 0);
+}
+
 TEST(DataStream1D, test_stress) {
-  DataStream1D obj(100);
+  DataStream1D obj(WINDOW_SIZE);
   for (int i = 1000000; i >= 0; i--) {
     obj.add(i);
     EXPECT_TRUE(obj.sum());
@@ -84,7 +99,7 @@ TEST(DataStream1D, test_naive) {
   deque<double> vals;
   for (int i = 1000000; i >= 0; i--) {
     vals.push_back(i);
-    if (vals.size() == 100)
+    if (vals.size() == WINDOW_SIZE)
     {
       EXPECT_TRUE(sum_of(vals));
       EXPECT_TRUE(average_of(vals));
