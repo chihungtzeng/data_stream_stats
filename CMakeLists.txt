@@ -13,7 +13,9 @@ add_compile_options(-Wall -Wextra)
 include_directories(include)
 add_library(${PROJECT_NAME} STATIC
   src/data_stream_1d.cpp
-  src/data_stream_2d.cpp)
+  src/data_stream_2d.cpp
+  src/indexed_priority_queue.cpp
+  )
 
 
 enable_testing()
@@ -21,5 +23,6 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 add_executable(${PROJECT_NAME}_test
   src/data_stream_1d_test.cpp
   src/data_stream_2d_test.cpp
+  src/indexed_priority_queue_test.cpp
   src/main_test.cpp)
 target_link_libraries(${PROJECT_NAME}_test gtest pthread ${PROJECT_NAME} ${GLOG_LIBRARIES})
