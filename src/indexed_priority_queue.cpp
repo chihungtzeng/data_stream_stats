@@ -13,6 +13,10 @@ IndexedPriorityQueue::IndexedPriorityQueue() {}
 
 IndexedPriorityQueue::~IndexedPriorityQueue() {}
 
+size_t IndexedPriorityQueue::size() {
+  return vals_.size();
+}
+
 double IndexedPriorityQueue::top() {
   if (vals_.size() > 0) {
     return vals_[0];
@@ -52,7 +56,8 @@ int IndexedPriorityQueue::pop_back() {
 }
 
 int IndexedPriorityQueue::exchange(int index1, int index2) {
-  if (index1 >= vals_.size() || index2 >= vals_.size()) {
+  const int n = vals_.size();
+  if (index1 < 0 || index1 >= n || index2 < 0 || index2 >= n) {
     return EXIT_FAILURE;
   }
   auto v1 = vals_[index1], v2 = vals_[index2];
@@ -82,13 +87,14 @@ int IndexedPriorityQueue::heapify_down(int index)
   auto largest = vals_[index];
   int next = index;
   int left_child = left(index);
-  if (left_child < vals_.size() && vals_[left_child] > largest)
+  const int n = vals_.size();
+  if (left_child < n && vals_[left_child] > largest)
   {
     largest = vals_[left_child];
     next = left_child;
   }
   int right_child = right(index);
-  if (right_child < vals_.size() && vals_[right_child] > largest)
+  if (right_child < n && vals_[right_child] > largest)
   {
     largest = vals_[right_child];
     next = right_child;
@@ -104,7 +110,6 @@ int IndexedPriorityQueue::heapify_down(int index)
 int IndexedPriorityQueue::heapify_up(int index)
 {
   bool done = false;
-  auto val = vals_[index];
   while (index > 0 && !done)
   {
     int pidx = parent(index);
