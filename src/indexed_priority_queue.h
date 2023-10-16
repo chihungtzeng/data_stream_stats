@@ -14,7 +14,7 @@ class IndexedPriorityQueue {
     int remove(double val);
     int add(double val);
     int pop();
-    size_t size();
+    std::size_t size();
 
   private:
     std::vector<double> vals_;

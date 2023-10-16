@@ -13,7 +13,7 @@ IndexedPriorityQueue::IndexedPriorityQueue() {}
 
 IndexedPriorityQueue::~IndexedPriorityQueue() {}
 
-size_t IndexedPriorityQueue::size() {
+std::size_t IndexedPriorityQueue::size() {
   return vals_.size();
 }
 
