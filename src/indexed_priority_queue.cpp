@@ -2,14 +2,16 @@
 #include "indexed_priority_queue.h"
 
 
-constexpr int EXIT_SUCCESS = 0;
-constexpr int EXIT_FAILURE = 1;
+//constexpr int EXIT_SUCCESS = 0;
+//constexpr int EXIT_FAILURE = 1;
 
 static int parent(int index) { return (index - 1) / 2; }
 static int left(int index) { return 2 * index + 1; }
 static int right(int index) { return 2 * index + 2; }
 
-IndexedPriorityQueue::IndexedPriorityQueue() {}
+IndexedPriorityQueue::IndexedPriorityQueue() {
+  less_ = [](double a, double b){return a < b;};
+}
 
 IndexedPriorityQueue::~IndexedPriorityQueue() {}
 
@@ -18,7 +20,7 @@ std::size_t IndexedPriorityQueue::size() {
 }
 
 double IndexedPriorityQueue::top() {
-  if (vals_.size() > 0) {
+  if (!vals_.empty()) {
     return vals_[0];
   } else {
     return MIN_DOUBLE;
@@ -32,7 +34,7 @@ int IndexedPriorityQueue::remove(double val) {
   int idx = *indexes_of_[val].begin();
   exchange(idx, vals_.size() - 1);
   pop_back();
-  if (vals_[idx] <= val) {
+  if (less_(vals_[idx], val)) {
     heapify_down(idx);
   } else {
     heapify_up(idx);
@@ -41,7 +43,7 @@ int IndexedPriorityQueue::remove(double val) {
 }
 
 int IndexedPriorityQueue::pop_back() {
-  if (vals_.size() == 0) {
+  if (vals_.empty()) {
     return EXIT_FAILURE;
   }
 
@@ -88,13 +90,13 @@ int IndexedPriorityQueue::heapify_down(int index)
   int next = index;
   int left_child = left(index);
   const int n = vals_.size();
-  if (left_child < n && vals_[left_child] > largest)
+  if (left_child < n && less_(largest, vals_[left_child]))
   {
     largest = vals_[left_child];
     next = left_child;
   }
   int right_child = right(index);
-  if (right_child < n && vals_[right_child] > largest)
+  if (right_child < n && less_(largest, vals_[right_child]))
   {
     largest = vals_[right_child];
     next = right_child;
@@ -113,7 +115,7 @@ int IndexedPriorityQueue::heapify_up(int index)
   while (index > 0 && !done)
   {
     int pidx = parent(index);
-    if (vals_[index] < vals_[pidx])
+    if (less_(vals_[index], vals_[pidx]))
     {
       done = true;
     } else {
@@ -122,5 +124,4 @@ int IndexedPriorityQueue::heapify_up(int index)
     }
   }
   return EXIT_SUCCESS;
-
 }

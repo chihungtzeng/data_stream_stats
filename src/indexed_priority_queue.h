@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <functional>
 
 constexpr double MIN_DOUBLE = std::numeric_limits<double>::lowest();
 
@@ -19,6 +20,7 @@ class IndexedPriorityQueue {
   private:
     std::vector<double> vals_;
     std::unordered_map<double, std::unordered_set<int>> indexes_of_;
+    std::function<bool(double, double)> less_;
 
     int heapify_down(int index);
     int heapify_up(int index);
