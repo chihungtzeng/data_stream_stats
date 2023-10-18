@@ -15,6 +15,7 @@ add_library(${PROJECT_NAME} STATIC
   src/data_stream_1d.cpp
   src/data_stream_2d.cpp
   src/indexed_priority_queue.cpp
+  src/median_tracker.cpp
   )
 
 
