@@ -9,7 +9,7 @@ constexpr double MIN_DOUBLE = std::numeric_limits<double>::lowest();
 
 class IndexedPriorityQueue {
   public:
-    IndexedPriorityQueue();
+    IndexedPriorityQueue(bool use_max_heap=true);
     ~IndexedPriorityQueue();
     double top();
     int remove(double val);

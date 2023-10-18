@@ -1,23 +1,24 @@
 
 #include "indexed_priority_queue.h"
 
-
-//constexpr int EXIT_SUCCESS = 0;
-//constexpr int EXIT_FAILURE = 1;
+// constexpr int EXIT_SUCCESS = 0;
+// constexpr int EXIT_FAILURE = 1;
 
 static int parent(int index) { return (index - 1) / 2; }
 static int left(int index) { return 2 * index + 1; }
 static int right(int index) { return 2 * index + 2; }
 
-IndexedPriorityQueue::IndexedPriorityQueue() {
-  less_ = [](double a, double b){return a < b;};
+IndexedPriorityQueue::IndexedPriorityQueue(bool use_max_heap) {
+  if (use_max_heap) {
+    less_ = [](double a, double b) { return a < b; };
+  } else {
+    less_ = [](double a, double b) { return a > b; };
+  }
 }
 
 IndexedPriorityQueue::~IndexedPriorityQueue() {}
 
-std::size_t IndexedPriorityQueue::size() {
-  return vals_.size();
-}
+std::size_t IndexedPriorityQueue::size() { return vals_.size(); }
 
 double IndexedPriorityQueue::top() {
   if (!vals_.empty()) {
@@ -71,52 +72,41 @@ int IndexedPriorityQueue::exchange(int index1, int index2) {
   return EXIT_SUCCESS;
 }
 
-int IndexedPriorityQueue::add(double val)
-{
+int IndexedPriorityQueue::add(double val) {
   vals_.push_back(val);
   indexes_of_[val].insert(vals_.size() - 1);
   heapify_up(vals_.size() - 1);
   return EXIT_SUCCESS;
 }
 
-int IndexedPriorityQueue::pop() {
-  return remove(vals_[0]);
-}
+int IndexedPriorityQueue::pop() { return remove(vals_[0]); }
 
-
-int IndexedPriorityQueue::heapify_down(int index)
-{
+int IndexedPriorityQueue::heapify_down(int index) {
   auto largest = vals_[index];
   int next = index;
   int left_child = left(index);
   const int n = vals_.size();
-  if (left_child < n && less_(largest, vals_[left_child]))
-  {
+  if (left_child < n && less_(largest, vals_[left_child])) {
     largest = vals_[left_child];
     next = left_child;
   }
   int right_child = right(index);
-  if (right_child < n && less_(largest, vals_[right_child]))
-  {
+  if (right_child < n && less_(largest, vals_[right_child])) {
     largest = vals_[right_child];
     next = right_child;
   }
-  if (next != index)
-  {
+  if (next != index) {
     exchange(index, next);
     heapify_down(next);
   }
   return EXIT_SUCCESS;
 }
 
-int IndexedPriorityQueue::heapify_up(int index)
-{
+int IndexedPriorityQueue::heapify_up(int index) {
   bool done = false;
-  while (index > 0 && !done)
-  {
+  while (index > 0 && !done) {
     int pidx = parent(index);
-    if (less_(vals_[index], vals_[pidx]))
-    {
+    if (less_(vals_[index], vals_[pidx])) {
       done = true;
     } else {
       exchange(index, pidx);

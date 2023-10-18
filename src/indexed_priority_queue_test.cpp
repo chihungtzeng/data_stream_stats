@@ -1,3 +1,4 @@
+#include <vector>
 #include "indexed_priority_queue.h"
 
 #include <gtest/gtest.h>
@@ -61,4 +62,21 @@ TEST(IndexedPriorityQueueTest, test_stress) {
     obj.remove(i);
   }
   EXPECT_EQ(obj.top(), ub);
+}
+
+TEST(IndexedPriorityQueueTest, test_min_heap)
+{
+  vector<double> vals{3, 1, 4, 1, 5, 9, 2, 6};
+  bool use_max_heap = false;
+  IndexedPriorityQueue obj(use_max_heap);
+  for(auto val: vals)
+  {
+    obj.add(val);
+  }
+  EXPECT_EQ(obj.top(), 1);
+  obj.pop();
+  EXPECT_EQ(obj.top(), 1);
+  obj.remove(2);
+  obj.pop();
+  EXPECT_EQ(obj.top(), 3);
 }
