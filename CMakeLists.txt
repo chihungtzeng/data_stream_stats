@@ -25,5 +25,6 @@ add_executable(${PROJECT_NAME}_test
   src/data_stream_1d_test.cpp
   src/data_stream_2d_test.cpp
   src/indexed_priority_queue_test.cpp
+  src/median_tracker_test.cpp
   src/main_test.cpp)
 target_link_libraries(${PROJECT_NAME}_test gtest pthread ${PROJECT_NAME} ${GLOG_LIBRARIES})

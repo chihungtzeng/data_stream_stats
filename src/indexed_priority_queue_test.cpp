@@ -5,7 +5,7 @@
 
 using namespace std;
 
-TEST(IndexedPriorityQueueTest, test_simple)
+TEST(IndexedPriorityQueueTest, test_simple_max_heap)
 {
   IndexedPriorityQueue obj;
   obj.add(3);
@@ -34,6 +34,16 @@ TEST(IndexedPriorityQueueTest, test_simple)
   EXPECT_EQ(obj.top(), 1);
   obj.pop();
   EXPECT_EQ(obj.top(), MIN_DOUBLE);
+}
+
+TEST(IndexedPriorityQueueTest, test_simple_min_heap)
+{
+  IndexedPriorityQueue obj(false);
+  obj.add(4);
+  obj.add(3);
+  obj.add(5);
+  obj.add(9);
+  EXPECT_EQ(obj.top(), 3);
 }
 
 TEST(IndexedPriorityQueueTest, test_remove)

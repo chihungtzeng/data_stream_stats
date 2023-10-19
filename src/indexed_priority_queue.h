@@ -16,6 +16,7 @@ public:
   int remove(double val);
   int add(double val);
   int pop();
+  bool empty() {return vals_.empty();}
   std::size_t size();
 
 private:

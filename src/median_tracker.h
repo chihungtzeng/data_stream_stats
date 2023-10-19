@@ -7,13 +7,13 @@ class IndexedPriorityQueue;
 class MedianTracker
 {
 public:
-  MedianTracker(int window_size);
-  ~MedianTracker(){};
+  MedianTracker();
+  ~MedianTracker();
   int add(double val);
   int remove(double val);
   double median();
 
 private:
-  int window_size_;
-  std::unique_ptr<IndexedPriorityQueue> max_ipq_ptr_, min_ipq_ptr_;
+  std::unique_ptr<IndexedPriorityQueue> min_ipq_ptr_, max_ipq_ptr_;
+  void rebalance();
 };
