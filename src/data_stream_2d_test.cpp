@@ -6,9 +6,11 @@
 
 using namespace std;
 
-TEST(DataStream2D, test_normal_window_size) {
+TEST(DataStream2D, test_normal_window_size)
+{
   DataStream2D obj(6);
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 16; i++)
+  {
     obj.add(i, (i + 15) % 7);
   }
 

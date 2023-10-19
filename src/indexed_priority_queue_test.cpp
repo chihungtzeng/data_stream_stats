@@ -5,7 +5,8 @@
 
 using namespace std;
 
-TEST(IndexedPriorityQueueTest, test_simple) {
+TEST(IndexedPriorityQueueTest, test_simple)
+{
   IndexedPriorityQueue obj;
   obj.add(3);
   obj.add(1);
@@ -35,7 +36,8 @@ TEST(IndexedPriorityQueueTest, test_simple) {
   EXPECT_EQ(obj.top(), MIN_DOUBLE);
 }
 
-TEST(IndexedPriorityQueueTest, test_remove) {
+TEST(IndexedPriorityQueueTest, test_remove)
+{
   IndexedPriorityQueue obj;
   obj.add(3);
   obj.add(1);
@@ -52,13 +54,16 @@ TEST(IndexedPriorityQueueTest, test_remove) {
   EXPECT_EQ(obj.top(), 3);
 }
 
-TEST(IndexedPriorityQueueTest, test_stress) {
+TEST(IndexedPriorityQueueTest, test_stress)
+{
   IndexedPriorityQueue obj;
   const int ub = 100000;
-  for (int i = ub; i >= 0; i--) {
+  for (int i = ub; i >= 0; i--)
+  {
     obj.add(i);
   }
-  for (int i = ub - 1000; i >= 1000; i--) {
+  for (int i = ub - 1000; i >= 1000; i--)
+  {
     obj.remove(i);
   }
   EXPECT_EQ(obj.top(), ub);
@@ -66,10 +71,10 @@ TEST(IndexedPriorityQueueTest, test_stress) {
 
 TEST(IndexedPriorityQueueTest, test_min_heap)
 {
-  vector<double> vals{3, 1, 4, 1, 5, 9, 2, 6};
+  vector<double> vals{ 3, 1, 4, 1, 5, 9, 2, 6 };
   bool use_max_heap = false;
   IndexedPriorityQueue obj(use_max_heap);
-  for(auto val: vals)
+  for (auto val : vals)
   {
     obj.add(val);
   }
