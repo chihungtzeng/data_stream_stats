@@ -1,8 +1,7 @@
-#include "data_stream_1d.h"
-
-#include <gtest/gtest.h>
-
 #include <cmath>
+#include <vector>
+#include <gtest/gtest.h>
+#include "data_stream_1d.h"
 
 using namespace std;
 const int WINDOW_SIZE = 10;
@@ -34,6 +33,21 @@ static double variance_of(deque<double>& vals)
 static double std_of(deque<double>& vals)
 {
   return sqrt(variance_of(vals));
+}
+
+static double median_of(deque<double>& vals)
+{
+  std::vector<double> vec{ vals.begin(), vals.end() };
+  std::sort(vec.begin(), vec.end());
+  auto m = vec.size() / 2;
+  if (vec.size() % 2 == 0)
+  {
+    return (vec[m] + vec[m - 1]) / 2;
+  }
+  else
+  {
+    return vec[m];
+  }
 }
 
 TEST(DataStream1D, test_normal_window_size)
