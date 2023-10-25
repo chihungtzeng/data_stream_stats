@@ -27,4 +27,12 @@ add_executable(${PROJECT_NAME}_test
   src/indexed_priority_queue_test.cpp
   src/median_tracker_test.cpp
   src/main_test.cpp)
-target_link_libraries(${PROJECT_NAME}_test gtest pthread ${PROJECT_NAME} ${GLOG_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_test gtest pthread ${PROJECT_NAME})
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	add_compile_options(-fsanitize=fuzzer,address,undefined)
+	add_link_options(-fsanitize=fuzzer,address,undefined -fPIE)
+
+	add_executable(data_stream_fuzz_test src/data_stream_fuzz_test.cpp)
+	target_link_libraries(data_stream_fuzz_test pthread ${PROJECT_NAME})
+endif()
