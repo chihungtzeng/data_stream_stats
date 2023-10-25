@@ -1,44 +1,28 @@
-#include <cassert>
+#include <iostream>
 #include <fuzzer/FuzzedDataProvider.h>
+#include "data_stream_1d.h"
 
 int iteration = 0;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 {
-// TODO: make fuzz work
-/*
   auto fdp = FuzzedDataProvider{ Data, Size };
   iteration++;
-  if (iteration % 100000 == 0)
+  if (iteration % 1000 == 0)
   {
-    LOG(INFO) << iteration << "th iteration, Size " << Size;
+    std::cout << iteration << "th iteration, Size " << Size << std::endl;
   }
 
-  while (fdp.remaining_bytes() >= sizeof(int) * 3)
+  DataStream1D obj(fdp.ConsumeIntegralInRange<int>(1, 32768));
+  while (fdp.remaining_bytes() >= sizeof(double))
   {
-    IPQ ipq;
-    int op = fdp.ConsumeIntegral<int>() % 5;
-    int key = fdp.ConsumeIntegral<int>();
-    int val = fdp.ConsumeIntegral<int>();
-    switch (op)
-    {
-      case 0:
-        ipq.empty();
-        break;
-      case 1:
-        ipq.top();
-        break;
-      case 2:
-        ipq.update(key, val);
-        break;
-      case 3:
-        ipq.push(key, val);
-        break;
-      default:
-        ipq.pop();
-    }
+    double val = fdp.ConsumeFloatingPoint<double>();
+    obj.add(val);
+    auto res = obj.sum();
+    res = obj.average();
+    res = obj.std();
+    res = obj.variance();
   }
-*/
   return 0;  // Values other than 0 and -1 are reserved for future use.
 }
 
