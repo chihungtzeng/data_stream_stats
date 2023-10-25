@@ -6,15 +6,15 @@
 
 static int parent(int index)
 {
-  return (index - 1) / 2;
+  return (index - 1) >> 1;
 }
 static int left(int index)
 {
-  return 2 * index + 1;
+  return 1 + (index << 1);
 }
 static int right(int index)
 {
-  return 2 * index + 2;
+  return 2 + (index << 1);
 }
 
 IndexedPriorityQueue::IndexedPriorityQueue(bool use_max_heap)
@@ -42,7 +42,7 @@ double IndexedPriorityQueue::top()
 {
   if (!vals_.empty())
   {
-    return vals_[0];
+    return vals_.front();
   }
   else
   {
@@ -80,7 +80,7 @@ int IndexedPriorityQueue::pop_back()
   double val = vals_.back();
 
   indexes_of_[val].erase(vals_.size() - 1);
-  if (indexes_of_[val].size() == 0)
+  if (indexes_of_[val].empty())
   {
     indexes_of_.erase(val);
   }
@@ -114,7 +114,7 @@ int IndexedPriorityQueue::add(double val)
 
 int IndexedPriorityQueue::pop()
 {
-  return remove(vals_[0]);
+  return remove(vals_.front());
 }
 
 int IndexedPriorityQueue::heapify_down(int index)
