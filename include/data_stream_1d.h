@@ -14,6 +14,7 @@ class DataStream1D {
   double std();
   double variance();
   double median();
+  std::size_t median_tracker_size();
 
  private:
   int window_size_;

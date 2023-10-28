@@ -19,12 +19,15 @@ DataStream1D::~DataStream1D()
 {
 }
 
+std::size_t DataStream1D::median_tracker_size()
+{
+  return median_tracker_ptr_->size();
+}
+
 void DataStream1D::add(double val)
 {
   auto front = vals.front();
   vals.pop_front();
-  // median_tracker_ptr_->remove(front);
-
   sum_ += val - front;
   square_sum_ += val * val - front * front;
   auto mu = sum_ / window_size_;
@@ -35,6 +38,7 @@ void DataStream1D::add(double val)
   if (enable_median_)
   {
     median_tracker_ptr_->add(val);
+    median_tracker_ptr_->remove(front);
   }
 }
 

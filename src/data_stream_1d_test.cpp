@@ -1,18 +1,17 @@
 #include <cmath>
+#include <numeric>
 #include <vector>
 #include <gtest/gtest.h>
 #include "data_stream_1d.h"
 
 using namespace std;
-const int WINDOW_SIZE = 100;
+const int WINDOW_SIZE = 300;
 const int NUM_LOOPS = 100000;
+const int P1 = 7727, P2 = 65537;  // prime numbers
 
 static double sum_of(deque<double>& vals)
 {
-  double s = 0;
-  for (auto& val : vals)
-    s += val;
-  return s;
+  return accumulate(vals.begin(), vals.end(), 0.0);
 }
 
 static double average_of(deque<double>& vals)
@@ -23,7 +22,7 @@ static double average_of(deque<double>& vals)
 static double variance_of(deque<double>& vals)
 {
   auto avg = average_of(vals);
-  auto res = 0;
+  double res = 0;
   for (auto& val : vals)
   {
     res += (val - avg) * (val - avg);
@@ -51,6 +50,12 @@ static double median_of(deque<double>& vals)
   }
 }
 
+TEST(DataStream1D, test_naive_variance)
+{
+  deque<double> vals{18770, 11043, 3316, 61126, 53399};
+  EXPECT_NEAR(variance_of(vals), 542551387.76, 1e-2);
+}
+
 TEST(DataStream1D, test_normal_window_size)
 {
   DataStream1D obj(6);
@@ -67,6 +72,9 @@ TEST(DataStream1D, test_normal_window_size)
   EXPECT_DOUBLE_EQ(obj.average(), 3.5);
   EXPECT_DOUBLE_EQ(obj.variance(), 35 / 12.0);
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
+
+  std::deque<double> vals{1,2,3,4,5,6};
+  EXPECT_DOUBLE_EQ(variance_of(vals), 35 / 12.0);
 }
 
 TEST(DataStream1D, test_window_size_one)
@@ -113,7 +121,7 @@ TEST(DataStream1D, test_stress_no_median)
   DataStream1D obj(WINDOW_SIZE);
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
-    obj.add(i);
+    obj.add((i * P1) % P2);
     EXPECT_TRUE(obj.sum());
     EXPECT_TRUE(obj.average());
     EXPECT_TRUE(obj.std());
@@ -126,7 +134,7 @@ TEST(DataStream1D, test_stress_with_median)
   DataStream1D obj(WINDOW_SIZE, true);
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
-    obj.add(i);
+    obj.add((i * P1) % P2);
     EXPECT_TRUE(obj.sum());
     EXPECT_TRUE(obj.average());
     EXPECT_TRUE(obj.std());
@@ -134,29 +142,44 @@ TEST(DataStream1D, test_stress_with_median)
   }
 }
 
-/*
 TEST(DataStream1D, test_correctness)
 {
   deque<double> vals;
   DataStream1D obj(WINDOW_SIZE, true);
-  for (int i = NUM_LOOPS; i >= 0; i--)
+  bool done = false;
+  for (int i = NUM_LOOPS; i >= 0 && !done; i--)
   {
-    obj.add(i);
-    EXPECT_EQ(obj.sum());
-    EXPECT_EQ(obj.average());
-    EXPECT_EQ(obj.std());
-    EXPECT_EQ(obj.variance());
-    EXPECT_EQ(obj.median());
+    int val = (i * P1) % P2;
+    vals.push_back(val);
+    obj.add(val);
+
+    if (vals.size() == WINDOW_SIZE)
+    {
+      //done = true;
+/*
+      std::cout << "i: " << i << "\n";
+      for(auto val: vals) {
+        std::cout << val << " ";
+      }
+        std::cout << "\n";
+        */
+      EXPECT_EQ(obj.median_tracker_size(), WINDOW_SIZE);
+      EXPECT_EQ(obj.sum(), sum_of(vals));
+      EXPECT_EQ(obj.average(), average_of(vals));
+      EXPECT_NEAR(obj.variance(), variance_of(vals), 1e-5);
+      EXPECT_NEAR(obj.std(), std_of(vals), 1e-5);
+      EXPECT_EQ(obj.median(), median_of(vals));
+      vals.pop_front();
+    }
   }
 }
-*/
 
 TEST(DataStream1D, test_naive_no_median)
 {
   deque<double> vals;
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
-    vals.push_back(i);
+    vals.push_back((i * P1) % P2);
     if (vals.size() == WINDOW_SIZE)
     {
       EXPECT_TRUE(sum_of(vals));
@@ -173,7 +196,7 @@ TEST(DataStream1D, test_naive_with_median)
   deque<double> vals;
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
-    vals.push_back(i);
+    vals.push_back((i * P1) % P2);
     if (vals.size() == WINDOW_SIZE)
     {
       EXPECT_TRUE(sum_of(vals));

@@ -12,6 +12,11 @@ MedianTracker::~MedianTracker()
 {
 }
 
+std::size_t MedianTracker::size()
+{
+  return min_ipq_ptr_->size() + max_ipq_ptr_->size();
+}
+
 int MedianTracker::add(double val)
 {
   if (min_ipq_ptr_->empty())
