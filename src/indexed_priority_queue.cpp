@@ -52,7 +52,7 @@ double IndexedPriorityQueue::top()
 
 int IndexedPriorityQueue::remove(double val)
 {
-  if (indexes_of_[val].size() == 0)
+  if (indexes_of_[val].empty())
   {
     return EXIT_FAILURE;
   }
