@@ -13,5 +13,4 @@ class DataStream2D {
  private:
   int window_size_;
   DataStream1D x_1d_, y_1d_, xy_1d_;
-  double cov_;
 };

@@ -13,15 +13,17 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
     std::cout << iteration << "th iteration, Size " << Size << std::endl;
   }
 
-  DataStream1D obj(fdp.ConsumeIntegralInRange<int>(1, 32768));
+  bool enable_median = true;
+  DataStream1D obj(fdp.ConsumeIntegralInRange<int>(1, 32768), enable_median);
   while (fdp.remaining_bytes() >= sizeof(double))
   {
     double val = fdp.ConsumeFloatingPoint<double>();
     obj.add(val);
-    auto res = obj.sum();
-    res = obj.average();
-    res = obj.std();
-    res = obj.variance();
+    obj.sum();
+    obj.average();
+    obj.std();
+    obj.variance();
+    obj.median();
   }
   return 0;  // Values other than 0 and -1 are reserved for future use.
 }
