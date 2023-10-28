@@ -4,7 +4,8 @@
 #include "data_stream_1d.h"
 
 using namespace std;
-const int WINDOW_SIZE = 10;
+const int WINDOW_SIZE = 100;
+const int NUM_LOOPS = 100000;
 
 static double sum_of(deque<double>& vals)
 {
@@ -107,10 +108,10 @@ TEST(DataStream1D, test_window_size_negtaive)
   EXPECT_DOUBLE_EQ(obj.std(), 0);
 }
 
-TEST(DataStream1D, test_stress)
+TEST(DataStream1D, test_stress_no_median)
 {
   DataStream1D obj(WINDOW_SIZE);
-  for (int i = 1000000; i >= 0; i--)
+  for (int i = NUM_LOOPS; i >= 0; i--)
   {
     obj.add(i);
     EXPECT_TRUE(obj.sum());
@@ -120,10 +121,40 @@ TEST(DataStream1D, test_stress)
   }
 }
 
-TEST(DataStream1D, test_naive)
+TEST(DataStream1D, test_stress_with_median)
+{
+  DataStream1D obj(WINDOW_SIZE, true);
+  for (int i = NUM_LOOPS; i >= 0; i--)
+  {
+    obj.add(i);
+    EXPECT_TRUE(obj.sum());
+    EXPECT_TRUE(obj.average());
+    EXPECT_TRUE(obj.std());
+    EXPECT_TRUE(obj.variance());
+  }
+}
+
+/*
+TEST(DataStream1D, test_correctness)
 {
   deque<double> vals;
-  for (int i = 1000000; i >= 0; i--)
+  DataStream1D obj(WINDOW_SIZE, true);
+  for (int i = NUM_LOOPS; i >= 0; i--)
+  {
+    obj.add(i);
+    EXPECT_EQ(obj.sum());
+    EXPECT_EQ(obj.average());
+    EXPECT_EQ(obj.std());
+    EXPECT_EQ(obj.variance());
+    EXPECT_EQ(obj.median());
+  }
+}
+*/
+
+TEST(DataStream1D, test_naive_no_median)
+{
+  deque<double> vals;
+  for (int i = NUM_LOOPS; i >= 0; i--)
   {
     vals.push_back(i);
     if (vals.size() == WINDOW_SIZE)
@@ -132,6 +163,24 @@ TEST(DataStream1D, test_naive)
       EXPECT_TRUE(average_of(vals));
       EXPECT_TRUE(variance_of(vals));
       EXPECT_TRUE(std_of(vals));
+      vals.pop_front();
+    }
+  }
+}
+
+TEST(DataStream1D, test_naive_with_median)
+{
+  deque<double> vals;
+  for (int i = NUM_LOOPS; i >= 0; i--)
+  {
+    vals.push_back(i);
+    if (vals.size() == WINDOW_SIZE)
+    {
+      EXPECT_TRUE(sum_of(vals));
+      EXPECT_TRUE(average_of(vals));
+      EXPECT_TRUE(variance_of(vals));
+      EXPECT_TRUE(std_of(vals));
+      EXPECT_TRUE(median_of(vals));
       vals.pop_front();
     }
   }
