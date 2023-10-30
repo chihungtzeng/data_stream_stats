@@ -45,11 +45,11 @@ void DataStream1D::add(double val)
   {
     min_vals_.pop_back();
   }
-  min_vals_.push_back(val);
-  if (min_vals_.front() == front)
+  if (!min_vals_.empty() && min_vals_.front() == front)
   {
     min_vals_.pop_front();
   }
+  min_vals_.push_back(val);
 }
 
 double DataStream1D::sum()

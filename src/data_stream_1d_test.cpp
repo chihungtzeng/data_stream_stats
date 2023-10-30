@@ -84,8 +84,8 @@ TEST(DataStream1D, test_normal_window_size)
   EXPECT_DOUBLE_EQ(obj.variance(), 35 / 12.0);
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
 
-  std::deque<double> vals{ 1, 2, 3, 4, 5, 6 };
-  EXPECT_DOUBLE_EQ(variance_of(vals), 35 / 12.0);
+  obj.add(-1);
+  EXPECT_DOUBLE_EQ(obj.min(), -1);
 }
 
 TEST(DataStream1D, test_window_size_one)
