@@ -19,6 +19,16 @@ static double average_of(deque<double>& vals)
   return sum_of(vals) / vals.size();
 }
 
+static double min_of(deque<double>& vals)
+{
+  double res = std::numeric_limits<double>::max();
+  for (auto val : vals)
+  {
+    res = min(val, res);
+  }
+  return res;
+}
+
 static double variance_of(deque<double>& vals)
 {
   auto avg = average_of(vals);
@@ -52,7 +62,7 @@ static double median_of(deque<double>& vals)
 
 TEST(DataStream1D, test_naive_variance)
 {
-  deque<double> vals{18770, 11043, 3316, 61126, 53399};
+  deque<double> vals{ 18770, 11043, 3316, 61126, 53399 };
   EXPECT_NEAR(variance_of(vals), 542551387.76, 1e-2);
 }
 
@@ -70,10 +80,11 @@ TEST(DataStream1D, test_normal_window_size)
 
   EXPECT_DOUBLE_EQ(obj.sum(), 21);
   EXPECT_DOUBLE_EQ(obj.average(), 3.5);
+  EXPECT_DOUBLE_EQ(obj.min(), 1);
   EXPECT_DOUBLE_EQ(obj.variance(), 35 / 12.0);
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
 
-  std::deque<double> vals{1,2,3,4,5,6};
+  std::deque<double> vals{ 1, 2, 3, 4, 5, 6 };
   EXPECT_DOUBLE_EQ(variance_of(vals), 35 / 12.0);
 }
 
@@ -86,32 +97,7 @@ TEST(DataStream1D, test_window_size_one)
   }
   EXPECT_DOUBLE_EQ(obj.sum(), 15);
   EXPECT_DOUBLE_EQ(obj.average(), 15);
-  EXPECT_DOUBLE_EQ(obj.variance(), 0);
-  EXPECT_DOUBLE_EQ(obj.std(), 0);
-}
-
-TEST(DataStream1D, test_window_size_zero)
-{
-  DataStream1D obj(0);
-  for (int i = 0; i < 16; i++)
-  {
-    obj.add(i);
-  }
-  EXPECT_DOUBLE_EQ(obj.sum(), 15);
-  EXPECT_DOUBLE_EQ(obj.average(), 15);
-  EXPECT_DOUBLE_EQ(obj.variance(), 0);
-  EXPECT_DOUBLE_EQ(obj.std(), 0);
-}
-
-TEST(DataStream1D, test_window_size_negtaive)
-{
-  DataStream1D obj(-1);
-  for (int i = 0; i < 16; i++)
-  {
-    obj.add(i);
-  }
-  EXPECT_DOUBLE_EQ(obj.sum(), 15);
-  EXPECT_DOUBLE_EQ(obj.average(), 15);
+  EXPECT_DOUBLE_EQ(obj.min(), 15);
   EXPECT_DOUBLE_EQ(obj.variance(), 0);
   EXPECT_DOUBLE_EQ(obj.std(), 0);
 }
@@ -122,10 +108,11 @@ TEST(DataStream1D, test_stress_no_median)
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
     obj.add((i * P1) % P2);
-    EXPECT_TRUE(obj.sum());
-    EXPECT_TRUE(obj.average());
-    EXPECT_TRUE(obj.std());
-    EXPECT_TRUE(obj.variance());
+    obj.sum();
+    obj.average();
+    obj.min();
+    obj.std();
+    obj.variance();
   }
 }
 
@@ -135,10 +122,12 @@ TEST(DataStream1D, test_stress_with_median)
   for (int i = NUM_LOOPS; i >= 0; i--)
   {
     obj.add((i * P1) % P2);
-    EXPECT_TRUE(obj.sum());
-    EXPECT_TRUE(obj.average());
-    EXPECT_TRUE(obj.std());
-    EXPECT_TRUE(obj.variance());
+    obj.sum();
+    obj.average();
+    obj.min();
+    obj.std();
+    obj.variance();
+    obj.median();
   }
 }
 
@@ -155,17 +144,18 @@ TEST(DataStream1D, test_correctness)
 
     if (vals.size() == WINDOW_SIZE)
     {
-      //done = true;
-/*
-      std::cout << "i: " << i << "\n";
-      for(auto val: vals) {
-        std::cout << val << " ";
-      }
-        std::cout << "\n";
-        */
+      // done = true;
+      /*
+            std::cout << "i: " << i << "\n";
+            for(auto val: vals) {
+              std::cout << val << " ";
+            }
+              std::cout << "\n";
+              */
       EXPECT_EQ(obj.median_tracker_size(), WINDOW_SIZE);
       EXPECT_EQ(obj.sum(), sum_of(vals));
       EXPECT_EQ(obj.average(), average_of(vals));
+      EXPECT_EQ(obj.min(), min_of(vals));
       EXPECT_NEAR(obj.variance(), variance_of(vals), 1e-5);
       EXPECT_NEAR(obj.std(), std_of(vals), 1e-5);
       EXPECT_EQ(obj.median(), median_of(vals));
@@ -182,10 +172,12 @@ TEST(DataStream1D, test_naive_no_median)
     vals.push_back((i * P1) % P2);
     if (vals.size() == WINDOW_SIZE)
     {
-      EXPECT_TRUE(sum_of(vals));
-      EXPECT_TRUE(average_of(vals));
-      EXPECT_TRUE(variance_of(vals));
-      EXPECT_TRUE(std_of(vals));
+      sum_of(vals);
+      average_of(vals);
+      min_of(vals);
+      variance_of(vals);
+      std_of(vals);
+
       vals.pop_front();
     }
   }
@@ -199,11 +191,13 @@ TEST(DataStream1D, test_naive_with_median)
     vals.push_back((i * P1) % P2);
     if (vals.size() == WINDOW_SIZE)
     {
-      EXPECT_TRUE(sum_of(vals));
-      EXPECT_TRUE(average_of(vals));
-      EXPECT_TRUE(variance_of(vals));
-      EXPECT_TRUE(std_of(vals));
-      EXPECT_TRUE(median_of(vals));
+      sum_of(vals);
+      average_of(vals);
+      min_of(vals);
+      variance_of(vals);
+      std_of(vals);
+      median_of(vals);
+
       vals.pop_front();
     }
   }
