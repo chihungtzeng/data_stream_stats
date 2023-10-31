@@ -2,7 +2,8 @@
 #include <functional>
 #include <limits>
 #include <unordered_map>
-#include <set>
+// #include <set>
+#include <unordered_set>
 #include <vector>
 
 constexpr double MIN_DOUBLE = std::numeric_limits<double>::lowest();
@@ -21,7 +22,8 @@ public:
 
 private:
   std::vector<double> vals_;
-  std::unordered_map<double, std::set<int>> indexes_of_;
+  // When window size is small, use std::set<int> as the key type is faster.
+  std::unordered_map<double, std::unordered_set<int>> indexes_of_;
   std::function<bool(double, double)> less_;
 
   int heapify_down(int index);

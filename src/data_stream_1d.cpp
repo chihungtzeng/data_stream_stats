@@ -40,6 +40,17 @@ void DataStream1D::add(double val)
     median_tracker_ptr_->add(val);
     median_tracker_ptr_->remove(front);
   }
+  // Update max_vals_
+  while (!max_vals_.empty() && max_vals_.back() < val)
+  {
+    max_vals_.pop_back();
+  }
+  if (!max_vals_.empty() && max_vals_.front() == front)
+  {
+    max_vals_.pop_front();
+  }
+  max_vals_.push_back(val);
+
   // Update min_vals_;
   while (!min_vals_.empty() && min_vals_.back() > val)
   {
@@ -60,6 +71,11 @@ double DataStream1D::sum()
 double DataStream1D::average()
 {
   return sum_ / window_size_;
+}
+
+double DataStream1D::max()
+{
+  return max_vals_.front();
 }
 
 double DataStream1D::min()

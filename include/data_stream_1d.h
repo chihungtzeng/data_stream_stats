@@ -12,6 +12,7 @@ public:
   void add(double val);
   double sum();
   double average();
+  double max();
   double min();
   double std();
   double variance();
@@ -21,7 +22,7 @@ public:
 private:
   int window_size_;
   std::deque<double> vals_;
-  std::deque<double> min_vals_;
+  std::deque<double> max_vals_, min_vals_;
   double sum_, variance_, square_sum_;
   std::unique_ptr<MedianTracker> median_tracker_ptr_;
   const bool enable_median_;

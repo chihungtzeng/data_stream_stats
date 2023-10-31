@@ -19,6 +19,16 @@ static double average_of(deque<double>& vals)
   return sum_of(vals) / vals.size();
 }
 
+static double max_of(deque<double>& vals)
+{
+  double res = std::numeric_limits<double>::lowest();
+  for (auto val : vals)
+  {
+    res = max(val, res);
+  }
+  return res;
+}
+
 static double min_of(deque<double>& vals)
 {
   double res = std::numeric_limits<double>::max();
@@ -80,6 +90,7 @@ TEST(DataStream1D, test_normal_window_size)
 
   EXPECT_DOUBLE_EQ(obj.sum(), 21);
   EXPECT_DOUBLE_EQ(obj.average(), 3.5);
+  EXPECT_DOUBLE_EQ(obj.max(), 6);
   EXPECT_DOUBLE_EQ(obj.min(), 1);
   EXPECT_DOUBLE_EQ(obj.variance(), 35 / 12.0);
   EXPECT_NEAR(obj.std(), 1.70782, 1e-5);
@@ -97,6 +108,7 @@ TEST(DataStream1D, test_window_size_one)
   }
   EXPECT_DOUBLE_EQ(obj.sum(), 15);
   EXPECT_DOUBLE_EQ(obj.average(), 15);
+  EXPECT_DOUBLE_EQ(obj.max(), 15);
   EXPECT_DOUBLE_EQ(obj.min(), 15);
   EXPECT_DOUBLE_EQ(obj.variance(), 0);
   EXPECT_DOUBLE_EQ(obj.std(), 0);
@@ -110,6 +122,7 @@ TEST(DataStream1D, test_stress_no_median)
     obj.add((i * P1) % P2);
     obj.sum();
     obj.average();
+    obj.max();
     obj.min();
     obj.std();
     obj.variance();
@@ -124,6 +137,7 @@ TEST(DataStream1D, test_stress_with_median)
     obj.add((i * P1) % P2);
     obj.sum();
     obj.average();
+    obj.max();
     obj.min();
     obj.std();
     obj.variance();
@@ -155,6 +169,7 @@ TEST(DataStream1D, test_correctness)
       EXPECT_EQ(obj.median_tracker_size(), WINDOW_SIZE);
       EXPECT_EQ(obj.sum(), sum_of(vals));
       EXPECT_EQ(obj.average(), average_of(vals));
+      EXPECT_EQ(obj.max(), max_of(vals));
       EXPECT_EQ(obj.min(), min_of(vals));
       EXPECT_NEAR(obj.variance(), variance_of(vals), 1e-5);
       EXPECT_NEAR(obj.std(), std_of(vals), 1e-5);
@@ -174,6 +189,7 @@ TEST(DataStream1D, test_naive_no_median)
     {
       sum_of(vals);
       average_of(vals);
+      max_of(vals);
       min_of(vals);
       variance_of(vals);
       std_of(vals);
@@ -193,6 +209,7 @@ TEST(DataStream1D, test_naive_with_median)
     {
       sum_of(vals);
       average_of(vals);
+      max_of(vals);
       min_of(vals);
       variance_of(vals);
       std_of(vals);
